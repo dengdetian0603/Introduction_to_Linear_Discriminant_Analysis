@@ -1,0 +1,175 @@
+Lesson Name:  Properties of Linear Discriminant Analysis
+Course Name:  Introduction to Linear Discriminant Analysis
+Type:         Standard
+Author:       Detian Deng   
+Organization: JHU biostatistics
+Version:      2.1.1
+================================================================
+
+--- &text
+
+Welcome to lesson 2, we will be learning about the basic properties of LDA and apply it to simulated data.
+
+--- &text
+
+In the previous lesson, we know that in the training procedure, what we are doing is actually to estimate the vector `mu_k` and covariance matrix `Sigma` for each conditional distribution given `y = l_k`. The actual estimates are calculated using Maximum Likelihood Estimator, which is not a focus of this course, so from now on, we will assume that we have computed the proper estimates for `mu_k` and `Sigma`.
+
+--- &text
+
+As introduced in lesson 1, in the prediction procedure, with a new observation `X*`, we are interested in looking for `argmax_{l in L} {P(X*|y=l,mu,Sigma)P(y=l)}`. 
+
+--- &text
+
+But in practice, we usually apply log tranformation to make it easier to compute, thus our classifier becomes: `argmax_{l in L} {X*T Sigma^{-1} mu_l - 1/2 mu_l Sigma^{-1} mu_l + log(P(y=l))}`, and note that if the lable space `L` contains only two elements, i.e. we are doing binary classification, the dicision boundary is a hyperplane,  because we will have it of the form `AX + b = 0`.
+
+--- &text 
+
+This is why LDA is called linear, and this is the most important property for LDA! 
+
+--- &text
+
+For X of two dimensions, the decision boundary is a straight line. The following graph should give you more intuition.
+
+--- &figure
+
+To visualize the decision boundary.
+
+*** .figure
+fig1.R
+
+*** .fig_type
+new
+
+--- &text
+
+So how LDA is implemented in R? 
+
+--- &text 
+
+Just use the `lda()` function in `MASS` library. 
+
+--- &text
+
+Next, we will practice using the LDA classifier on a built-in data set in R. Please follow the instructions.
+
+
+--- &cmd_question
+
+First, type `library(MASS)` to import the library. 
+
+```{r}
+library(MASS)
+```
+
+*** .hint
+Please type library(MASS).
+
+
+--- &cmd_question
+
+Now, type `data(iris)` to load the data set.
+
+```{r}
+data(iris)
+```
+
+*** .hint
+Please type `data(iris)`.
+
+
+--- &cmd_question
+
+Now, type `train = sample(1:150,size=110)` to get the training set index.
+
+```{r}
+train = sample(1:150,size=110)
+```
+
+*** .hint
+Please type `train = sample(1:150,size=110)`.
+
+
+--- &cmd_question
+
+Now, type `test = setdiff(1:150,train)` to get the testing set index.
+
+```{r}
+test = setdiff(1:150,train)
+```
+
+*** .hint
+Please type `test = setdiff(1:150,train)`.
+
+
+--- &cmd_question
+
+Now, type `fit = lda(Species~., iris, subset = train)` to train the LDA classifier.
+
+```{r}
+fit = lda(Species~., iris, subset = train)
+```
+
+*** .hint
+Please type `fit = lda(Species~., iris, subset = train)`.
+
+
+--- &cmd_question
+
+Now, type `pred = predict(fit, newdata = iris[test,])$class` to make predictions for the testing set.
+
+```{r}
+pred = predict(fit, newdata = iris[test,])$class
+```
+
+*** .hint
+Please type `pred = predict(fit, newdata = iris[test,])$class`.
+
+
+--- &cmd_question
+
+Now, type `mean(pred==iris[test,]$Species)` to find the testing accuracy.
+
+```{r}
+mean(pred==iris[test,]$Species)
+```
+
+*** .hint
+Please type `mean(pred==iris[test,]$Species)`.
+
+
+--- &text
+Now you have successfully implemented the LDA classifier in R. And let's have a quiz to see if you get the sense of how LDA works. 
+
+
+--- &mult_question
+
+Quiz. Is your previous prediction accuracy good enough? Based on you knowledge of LDA, choose the situation where the LDA classifier is most likely to give very inaccurate predictions. 
+
+_1. `Some features follow bimodal distributions, other features are hightly skewed and heavy tailed`_
+2. `All features are jointly Normal with small variances and different conditional means.`
+3. `All observations are linearly separatable.`
+
+*** .hint
+Think of the model assumptions and properties of LDA.
+
+
+
+--- &text
+
+From the previous question, you might notice that LDA is an easy but not a universally applicable classifier. For LDA to make accurate predictions, the data should satisfy the following conditions as close as possible. 
+
+--- &text
+
+First, the norm of the difference between the conditioal means should be large relative to the norm of the estimated common covariance matrix. Intuitively speaking, if the data with different labels were too close to each other, it would be a bad idea to classify them using a linear decision boundary.
+
+--- &text
+
+Second, the conditional distributions of the features should not deviate too much from Normal. For example, if a number of features were from bimodal or highly skewed distributions, the bias of the estimate of `P(X|Y=l)` would be too large to generate a correct `argmax_y P(X|y=l)P(y=l)`
+
+
+--- &text
+Third, the conditional covariance matrix should not differ too much. Otherwise, the bias of the estimate of `P(X|Y=l)` would also be large. However, if both previous conditions are satisfied, whether this condition holds may not have a large impact on the prediction performance.
+
+--- &text
+
+Congratulations! You have finished the second lesson as well as the whole course.

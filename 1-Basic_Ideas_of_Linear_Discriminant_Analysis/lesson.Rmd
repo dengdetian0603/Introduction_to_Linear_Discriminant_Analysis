@@ -1,0 +1,91 @@
+Lesson Name:  Basic Ideas of Linear Discriminant Analysis
+Course Name:  Introduction to Linear Discriminant Analysis
+Type:         Standard
+Author:       Detian Deng
+Organization: JHU Biostatistics
+Version:      2.1.1
+================================================================
+
+--- &text
+
+Welcome to the first lesson of Introduction to Linear Discriminant Analysis, you are going to learn some basic ideas of linear discriminant analysis (LDA) in this lesson.        
+
+--- &text
+
+Before explaining what is LDA and how it works, let me introduce the notations that we are going to use.   
+
+--- &text
+
+In a data set with n observations, the n by 1 vector `y` is used to denote the observed class label. `y_i` is the ith label, which belongs to a space `L = {l_1, l_2,...}` where `l`s are the possible values of `y_i`. In our model, `Y` is used to denote the random variable representing the class.  
+
+--- &text
+
+When `X` is a n by p matrix, it is used to denote the observed features/covariates/independent variables, where `x_ij` is the ith observation of the jth feature. When `X` is a p by 1 vector, it is used to denote the random vector representing the covariates, where `X_j` is the random variable for the jth feature, in this case, we can write: `X = (X_1 X_2 ... X_p)^T`.
+
+--- &text
+
+Now, let me introduce the basic ideas of LDA. In short, LDA is a  maximum a posteriori(MAP) classifier based on a multivariate Gaussian likelihood assuming common covariance structure. Don' t worry, let me explain it one by one.      
+
+--- &text
+
+1. Multivariate Gaussian likelihood means that conditioning on the class label `y=l_k`, the joint distribution of `X` is a multivariate Gaussian distribution with mean `mu_k` and covariance matrix `Sigma_k`.
+
+--- &text
+
+2. Common covariance structure means that all conditional distribution of `X` share the same covariance structure, i.e. `Sigma_k = Sigma` for all k.
+
+--- &text
+
+3. Maximum a posteriori(MAP) means that we choose the class `y` such that the probability of `Y=y` given `X` is maximized, i.e. the posterior mode of `P(Y|X)`.
+
+--- &text
+
+4. One last thing is that, the prior is calculated emperically unless manually specified.
+
+--- &text
+
+Putting 1 to 4 all together, we can see that a LDA classifier is essentially looking for the mode of the posterior distribution, i.e. `argmax_y {P(y|X_training,X_new)}`, where `P(y|X_training,X_new) = P(y|X_new,\hat{mu},\hat{Sigma})`, thus the training purpose is to estimate the common `Sigma`, `mu` for each value of `y`, and the prior `P(y)`. 
+
+--- &text
+
+Good job, you have almost reached the end of this lesson. Let's have a quiz to see how well your learned!
+
+
+--- &mult_question
+
+Question 1. Which of the following assumptions is not made in the model of LDA?
+
+_1. Independent covariates_
+2. Multivariate Guassian likelihood
+3. Same covariance matrix for each distribution of `P(X|Y)`
+
+*** .hint
+Try again. 
+
+
+--- &mult_question
+
+Question 2. What are we actually doing when we train the LDA model?
+
+_1. Estimate parameters: mu, Sigma, and P(y) according to the model assumptions._
+2. Find the Euclidean distance between each observation.
+3. Estimate a set of parameters beta, such that `X^T beta` best separates the two classes.
+
+*** .hint
+Try again. 
+
+--- &mult_question
+
+Question 3. When we have a new observation X*, how should we classify/label it according to the model we just trained?
+
+_1. Label it with y = `argmax_{l in L} {P(X*|y=l,mu,Sigma)P(y=l)}`_
+2. Label it with the value of `y` of the nearest observation in the training set.
+3. Label it with `y = I(X*^T beta > 0)`.
+
+*** .hint
+Try again. 
+
+--- &text 
+Congratulations! You have finished the first lesson. Get prepared and go to the next lecture!
+
+
